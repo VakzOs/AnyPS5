@@ -2,6 +2,7 @@
 #include "SceTypes.hpp"
 #include "prx/libc/include/general/VabiMacros.hpp"
 #include <cstddef>
+#include <cstdint>
 #include <cstdlib>
 #include <cstring>
 #include <exception>
@@ -30,6 +31,7 @@ int main() {
     Require(sceSharePlayProhibitController(0) == notInitialized);
     Require(sceSharePlayProhibitController(1) == notInitialized);
     Require(sceSharePlayProhibitController(2) == notInitialized);
+    Require(sceSharePlaySetProhibition(0) == notInitialized);
     Require(sceSharePlayInitialize(nullptr, sizeof(heap)) == 0);
     Require(sceSharePlayInitialize(heap, 0) == alreadyInitialized);
     Require(sceSharePlayTerminate() == 0);
@@ -57,6 +59,7 @@ int main() {
     Require(sceSharePlayProhibitController(0) == 0);
     Require(sceSharePlayProhibitController(2) == invalidArgument);
     Require(sceSharePlayProhibitController(255) == invalidArgument);
+    for (const std::int32_t mode : {0, 1, 2, -1}) Require(sceSharePlaySetProhibition(mode) == 0);
     Require(sceSharePlayTerminate() == 0);
     std::memset(&info, 0x5a, sizeof(info));
     Require(sceSharePlayGetCurrentConnectionInfoA(&info) == notInitialized);
